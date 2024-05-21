@@ -23,44 +23,44 @@ The file NILM_autoencoder.py contains contains comments that explain what each f
 ```python
 #1. Load the dataset
 
-    #Here we load our own dataset from the NILM_datasets/SmartMeter folder
+#Here we load our own dataset from the NILM_datasets/SmartMeter folder
 
-    sm = SmartMeter()
-    v, i, labels = sm.load_dataset()
+sm = SmartMeter()
+v, i, labels = sm.load_dataset()
 
-    #We can also load v,i and p,q from the REDD dataset, depending on what data we want to use
-    vi, pq, labels = load_datasets(house="house_3", num_classes=22)
+#We can also load v,i and p,q from the REDD dataset, depending on what data we want to use
+vi, pq, labels = load_datasets(house="house_3", num_classes=22)
 
-    #2. Train the models
+#2. Train the models
 
-    train_feature_extractors(vi.i, model_name='REDD-i')
+train_feature_extractors(vi.i, model_name='REDD-i')
 
-    #3. Load NILM classifiers
+#3. Load NILM classifiers
 
-    xgb = RandomForestClassifier(n_estimators=100,
-                                     max_depth=10)
-     
-    knn = KNeighborsClassifier(n_neighbors=10)
+xgb = RandomForestClassifier(n_estimators=100,
+                                 max_depth=10)
+ 
+knn = KNeighborsClassifier(n_neighbors=10)
 
-    rf = RandomForestClassifier(n_estimators=100,
-                                      max_depth=10)
-    classifiers = [xgb, knn, rf]
+rf = RandomForestClassifier(n_estimators=100,
+                                  max_depth=10)
+classifiers = [xgb, knn, rf]
 
-    #4-a. Run the load classification with sampling reduction and feature extraction
-    # Extracting features from a single model (here we used our own data)
+#4-a. Run the load classification with sampling reduction and feature extraction
+# Extracting features from a single model (here we used our own data)
 
-    run_individual_experiments(vi.i, labels, reduction_factor=16, feature=4, name='REDD-i', clf=rf)
+run_individual_experiments(vi.i, labels, reduction_factor=16, feature=4, name='REDD-i', clf=rf)
 
-    #4-b. Run the load classification with sampling reduction and extract features
-    # from multiple models (here we used the REDD dataset, combining v-i and p-q features.
+#4-b. Run the load classification with sampling reduction and extract features
+# from multiple models (here we used the REDD dataset, combining v-i and p-q features.
 
-    data_joint = {"datasets":[pq.p_inst, vi.i],
-                  "names":["REDD-p", "REDD-i"],
-                  "features":[4, 4],
-                  "reduction_factors": [16,16],
-                  "labels":labels}
+data_joint = {"datasets":[pq.p_inst, vi.i],
+              "names":["REDD-p", "REDD-i"],
+              "features":[4, 4],
+              "reduction_factors": [16,16],
+              "labels":labels}
 
-    run_joint_experiments(data_joint, clf=rf)
+run_joint_experiments(data_joint, clf=rf)
 ```
 
 The ```train_feature_extractors``` function trains the models that perform feature extraction.
